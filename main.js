@@ -1,5 +1,5 @@
 // Do your work here...
-const books = [];
+let books = [];
 const STORAGE_KEY = 'bookshelf_app';
 const BOOK_SAVED_EVENT = 'book_saved';
 const RENDER_EVENT = 'render_book';
@@ -52,4 +52,106 @@ document.addEventListener(RENDER_EVENT, function () {
   });
 });
 
-function makeBookElt(book) {}
+document.addEventListener('DOMContentLoaded', () => {
+  const bookForm = document.getElementById('bookForm');
+  bookForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addBook();
+  });
+
+  if (StorageExists()) {
+    loadDataFromStorage();
+  }
+});
+
+/**
+ * Format:
+ * ```html
+ * <div data-bookid="123123123" data-testid="bookItem">
+ *   <h3 data-testid="bookItemTitle">Judul Buku 1</h3>
+ *   <p data-testid="bookItemAuthor">Penulis: Penulis Buku 1</p>
+ *   <p data-testid="bookItemYear">Tahun: 2030</p>
+ *   <div>
+ *     <button data-testid="bookItemIsCompleteButton">Selesai dibaca</button>
+ *     <button data-testid="bookItemDeleteButton">Hapus buku</button>
+ *     <button data-testid="bookItemEditButton">Edit buku</button>
+ *   </div>
+ * </div>
+ * ```
+ * @param {} book
+ */
+function makeBookElt(bookData) {
+  const { id, title, author, year, isComplete } = bookData;
+
+  const bookElement = document.createElement('div');
+  bookElement.setAttribute('data-bookid', id);
+  bookElement.setAttribute('data-testid', 'bookItem');
+
+  const judul = document.createElement('h3');
+  judul.setAttribute('data-testid', 'bookItemTitle');
+  judul.innerText = title;
+
+  const penulis = document.createElement('p');
+  penulis.setAttribute('data-testid', 'bookItemAuthor');
+  penulis.innerText = author;
+
+  const tahun = document.createElement('p');
+  tahun.setAttribute('data-testid', 'bookItemYear');
+  tahun.innerText = year;
+
+  const tombol = document.createElement('div');
+
+  const selesai = document.createElement('button');
+  selesai.setAttribute('data-testid', 'bookItemIsCompleteButton');
+  selesai.innerText = 'Selesai dibaca';
+  selesai.addEventListener('click', () => moveToFinishedBook());
+
+  const belumSelesai = document.createElement('button');
+  belumSelesai.setAttribute('data-testid', 'bookItemIsCompleteButton');
+  belumSelesai.innerText = 'Belum selesai dibaca';
+  belumSelesai.addEventListener('click', () => moveToUnfinishedBook());
+
+  const hapus = document.createElement('button');
+  hapus.setAttribute('data-testid', 'bookItemDeleteButton');
+  hapus.innerText = 'Hapus buku';
+  hapus.addEventListener('click', () => deleteBook());
+
+  const edit = document.createElement('button');
+  edit.setAttribute('data-testid', 'bookItemEditButton');
+  edit.innerText = 'Edit buku';
+  edit.addEventListener('click', () => editBook());
+
+  if (isComplete) {
+    tombol.append(belumSelesai, hapus, edit);
+  } else {
+    tombol.append(selesai, hapus, edit);
+  }
+
+  bookElement.append(judul, penulis, tahun, tombol);
+
+  return bookElement;
+}
+
+function generateBookData(title, author, year, isComplete) {
+  const id = genId();
+
+  return {
+    id,
+    title,
+    author,
+    year,
+    isComplete,
+  };
+}
+
+function genId() {
+  return new Date().getTime();
+}
+
+function moveToFinishedBook() {}
+
+function moveToUnfinishedBook() {}
+
+function deleteBook() {}
+
+function editBook() {}
