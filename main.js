@@ -133,12 +133,12 @@ function makeBookElt(bookData) {
   const selesai = document.createElement('button');
   selesai.setAttribute('data-testid', 'bookItemIsCompleteButton');
   selesai.innerText = 'Selesai dibaca';
-  selesai.addEventListener('click', () => moveToFinishedBook());
+  selesai.addEventListener('click', () => moveToFinishedBook(id));
 
   const belumSelesai = document.createElement('button');
   belumSelesai.setAttribute('data-testid', 'bookItemIsCompleteButton');
   belumSelesai.innerText = 'Belum selesai dibaca';
-  belumSelesai.addEventListener('click', () => moveToUnfinishedBook());
+  belumSelesai.addEventListener('click', () => moveToUnfinishedBook(id));
 
   const hapus = document.createElement('button');
   hapus.setAttribute('data-testid', 'bookItemDeleteButton');
@@ -161,9 +161,29 @@ function makeBookElt(bookData) {
   return bookElement;
 }
 
-function moveToFinishedBook() {}
+function moveToFinishedBook(bookId) {
+  for (const book of books) {
+    if (book.id === bookId) {
+      book.isComplete = true;
+      break;
+    }
+  }
 
-function moveToUnfinishedBook() {}
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function moveToUnfinishedBook(bookId) {
+  for (const book of books) {
+    if (book.id === bookId) {
+      book.isComplete = false;
+      break;
+    }
+  }
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
 
 function deleteBook() {}
 
