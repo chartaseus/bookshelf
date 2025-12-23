@@ -64,6 +64,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+function addBook() {
+  const title = document.getElementById('bookFormTitle').value;
+  const author = document.getElementById('bookFormAuthor').value;
+  const year = document.getElementById('bookFormYear').value;
+  const isComplete = document.getElementById('bookFormIsComplete').checked;
+
+  const book = generateBookData(title, author, year, isComplete);
+  books.push(book);
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function generateBookData(title, author, year, isComplete) {
+  const id = genId();
+
+  return {
+    id,
+    title,
+    author,
+    year,
+    isComplete,
+  };
+}
+
+function genId() {
+  return new Date().getTime();
+}
+
 /**
  * Format:
  * ```html
@@ -130,22 +159,6 @@ function makeBookElt(bookData) {
   bookElement.append(judul, penulis, tahun, tombol);
 
   return bookElement;
-}
-
-function generateBookData(title, author, year, isComplete) {
-  const id = genId();
-
-  return {
-    id,
-    title,
-    author,
-    year,
-    isComplete,
-  };
-}
-
-function genId() {
-  return new Date().getTime();
 }
 
 function moveToFinishedBook() {}
