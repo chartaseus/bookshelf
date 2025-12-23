@@ -143,12 +143,12 @@ function makeBookElt(bookData) {
   const hapus = document.createElement('button');
   hapus.setAttribute('data-testid', 'bookItemDeleteButton');
   hapus.innerText = 'Hapus buku';
-  hapus.addEventListener('click', () => deleteBook());
+  hapus.addEventListener('click', () => deleteBook(id));
 
   const edit = document.createElement('button');
   edit.setAttribute('data-testid', 'bookItemEditButton');
   edit.innerText = 'Edit buku';
-  edit.addEventListener('click', () => editBook());
+  edit.addEventListener('click', () => editBook(id));
 
   if (isComplete) {
     tombol.append(belumSelesai, hapus, edit);
@@ -185,6 +185,13 @@ function moveToUnfinishedBook(bookId) {
   saveData();
 }
 
-function deleteBook() {}
+function deleteBook(bookId) {
+  const index = books.findIndex((book) => book.id === bookId)
+
+  books.splice(index, 1)
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
 
 function editBook() {}
