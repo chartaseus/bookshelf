@@ -55,8 +55,12 @@ document.addEventListener(RENDER_EVENT, function () {
 document.addEventListener('DOMContentLoaded', () => {
   const bookForm = document.getElementById('bookForm');
   bookForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    addBook();
+    if (!document.querySelector('#bookId')) {
+      e.preventDefault();
+      addBook();
+    } else {
+      updateBook();
+    }
   });
 
   if (StorageExists()) {
@@ -78,7 +82,12 @@ function addBook() {
 }
 
 function generateBookData(title, author, year, isComplete) {
-  const id = genId();
+  let id = document.getElementById('bookId');
+  if (!id) {
+    id = genId();
+  } else {
+    id = parseInt(id.value);
+  }
 
   return {
     id,
@@ -186,12 +195,49 @@ function moveToUnfinishedBook(bookId) {
 }
 
 function deleteBook(bookId) {
-  const index = books.findIndex((book) => book.id === bookId)
+  const index = findBookIndex(bookId);
 
-  books.splice(index, 1)
+  books.splice(index, 1);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
 
-function editBook() {}
+function findBookIndex(bookId) {
+  return books.findIndex((book) => book.id === bookId);
+}
+
+function editBook(bookId) {
+  const bookIndex = findBookIndex(bookId);
+  const book = books[bookIndex];
+
+  document.getElementById('bookFormTitle').value = book.title;
+  document.getElementById('bookFormAuthor').value = book.author;
+  document.getElementById('bookFormYear').value = book.year;
+  document.getElementById('bookFormIsComplete').checked = book.isComplete;
+  document.getElementById('bookFormSubmit').innerText = 'Perbarui data';
+  document.querySelector('main>section>h2').textContent = 'Perbarui Data Buku';
+
+  const bookNumber = document.createElement('input');
+  bookNumber.setAttribute('type', 'hidden');
+  bookNumber.setAttribute('id', 'bookId');
+  bookNumber.value = book.id;
+  const form = document.getElementById('bookForm');
+  form.prepend(bookNumber);
+  location.href = '#form';
+}
+
+function updateBook() {
+  const id = parseInt(document.getElementById('bookId').value);
+  const title = document.getElementById('bookFormTitle').value;
+  const author = document.getElementById('bookFormAuthor').value;
+  const year = document.getElementById('bookFormYear').value;
+  const isComplete = document.getElementById('bookFormIsComplete').checked;
+
+  const book = generateBookData(title, author, year, isComplete);
+  const bookIndex = findBookIndex(id);
+  books.splice(bookIndex, 1, book);
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
