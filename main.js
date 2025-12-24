@@ -23,7 +23,7 @@ function saveData() {
 function loadDataFromStorage() {
   const json = localStorage.getItem(STORAGE_KEY);
 
-  if (books !== null) {
+  if (json) {
     books = JSON.parse(json);
   }
 
