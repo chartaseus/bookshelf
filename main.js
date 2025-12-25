@@ -1,5 +1,5 @@
 // Do your work here...
-let books = [];
+const BOOKS = [];
 const STORAGE_KEY = 'bookshelf_app';
 const BOOK_SAVED_EVENT = 'book_saved';
 const RENDER_EVENT = 'render_book';
@@ -14,7 +14,7 @@ function StorageExists() {
 
 function saveData() {
   if (StorageExists()) {
-    const booksJSON = JSON.stringify(books);
+    const booksJSON = JSON.stringify(BOOKS);
     localStorage.setItem(STORAGE_KEY, booksJSON);
     document.dispatchEvent(new Event(BOOK_SAVED_EVENT));
   }
@@ -24,7 +24,7 @@ function loadDataFromStorage() {
   const json = localStorage.getItem(STORAGE_KEY);
 
   if (json) {
-    books = JSON.parse(json);
+    JSON.parse(json).forEach((book) => BOOKS.push(book));
   }
 
   document.dispatchEvent(new Event(RENDER_EVENT));
@@ -41,7 +41,7 @@ document.addEventListener(RENDER_EVENT, function () {
   const finishedReads = document.getElementById('completeBookList');
   finishedReads.innerHTML = '';
 
-  books.forEach((book) => {
+  BOOKS.forEach((book) => {
     const bookElement = makeBookElt(book);
 
     if (book.isComplete) {
@@ -75,7 +75,7 @@ function addBook() {
   const isComplete = document.getElementById('bookFormIsComplete').checked;
 
   const book = generateBookData(title, author, year, isComplete);
-  books.push(book);
+  BOOKS.push(book);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
@@ -118,8 +118,8 @@ function genId() {
  * ```
  * @param {} book
  */
-function makeBookElt(bookData) {
-  const { id, title, author, year, isComplete } = bookData;
+function makeBookElt(book) {
+  const { id, title, author, year, isComplete } = book;
 
   const bookElement = document.createElement('div');
   bookElement.setAttribute('data-bookid', id);
@@ -171,7 +171,7 @@ function makeBookElt(bookData) {
 }
 
 function moveToFinishedBook(bookId) {
-  for (const book of books) {
+  for (const book of BOOKS) {
     if (book.id === bookId) {
       book.isComplete = true;
       break;
@@ -183,7 +183,7 @@ function moveToFinishedBook(bookId) {
 }
 
 function moveToUnfinishedBook(bookId) {
-  for (const book of books) {
+  for (const book of BOOKS) {
     if (book.id === bookId) {
       book.isComplete = false;
       break;
@@ -197,19 +197,19 @@ function moveToUnfinishedBook(bookId) {
 function deleteBook(bookId) {
   const index = findBookIndex(bookId);
 
-  books.splice(index, 1);
+  BOOKS.splice(index, 1);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
 
 function findBookIndex(bookId) {
-  return books.findIndex((book) => book.id === bookId);
+  return BOOKS.findIndex((book) => book.id === bookId);
 }
 
 function editBook(bookId) {
   const bookIndex = findBookIndex(bookId);
-  const book = books[bookIndex];
+  const book = BOOKS[bookIndex];
 
   document.getElementById('bookFormTitle').value = book.title;
   document.getElementById('bookFormAuthor').value = book.author;
@@ -236,7 +236,7 @@ function updateBook() {
 
   const book = generateBookData(title, author, year, isComplete);
   const bookIndex = findBookIndex(id);
-  books.splice(bookIndex, 1, book);
+  BOOKS.splice(bookIndex, 1, book);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
