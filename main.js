@@ -1,5 +1,5 @@
 // Do your work here...
-const BOOKS = [];
+let BOOKS = [];
 const STORAGE_KEY = 'bookshelf_app';
 const BOOK_SAVED_EVENT = 'book_saved';
 const RENDER_EVENT = 'render_book';
@@ -24,10 +24,8 @@ function loadDataFromStorage() {
   const json = localStorage.getItem(STORAGE_KEY);
 
   if (json) {
-    JSON.parse(json).forEach((book) => BOOKS.push(book));
+    BOOKS = JSON.parse(json);
   }
-
-  document.dispatchEvent(new Event(RENDER_EVENT));
 }
 
 document.addEventListener(BOOK_SAVED_EVENT, () => {
@@ -65,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (StorageExists()) {
     loadDataFromStorage();
+    document.dispatchEvent(new Event(RENDER_EVENT));
   }
 });
 
@@ -240,4 +239,33 @@ function updateBook() {
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
+}
+
+/* Search Books ////////////////////////////// */
+
+const searchForm = document.getElementById('searchBook');
+searchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  findBook();
+});
+const notFound = document.createElement('p');
+searchForm.appendChild(notFound);
+
+function findBook() {
+  const searchInput = document.getElementById('searchBookTitle');
+  const query = searchInput.value.toLowerCase().trim();
+  const searchResults = BOOKS.filter((book) =>
+    book.title.toLowerCase().includes(query)
+);
+
+if (searchResults.length > 0) {
+  BOOKS = searchResults; // cuma sementara karena RENDER_EVENT hanya bisa merender dari variable BOOKS
+  notFound.textContent = '';
+} else {
+  BOOKS = []; // sementara
+  notFound.textContent = 'Buku tidak ditemukan.';
+  }
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  loadDataFromStorage(); // mengembalikan data lengkap agar bisa dioperasikan lagi tanpa reload
 }
