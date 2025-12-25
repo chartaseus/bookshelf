@@ -130,11 +130,11 @@ function makeBookElt(book) {
 
   const penulis = document.createElement('p');
   penulis.setAttribute('data-testid', 'bookItemAuthor');
-  penulis.innerText = author;
+  penulis.innerText = `Penulis: ${author}`;
 
   const tahun = document.createElement('p');
   tahun.setAttribute('data-testid', 'bookItemYear');
-  tahun.innerText = year;
+  tahun.innerText = `Tahun: ${year}`;
 
   const tombol = document.createElement('div');
 
