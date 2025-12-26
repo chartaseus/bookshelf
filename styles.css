@@ -3,21 +3,105 @@
 }
 
 body {
-  font-family: monospace;
-  line-height: 1.5;
-  width: 400px;
+  font-family: Sono, monospace;
+  font-weight: 500;
+  line-height: 1;
+  max-width: 500px;
   margin: 0 auto;
   padding: 24px;
   border: 5px double;
 }
 
-section {
-  border-top: 2px dashed;
-  margin-block: 24px
+h1,
+h2,
+h3 {
+  font-family: 'Fira Mono', monospace;
+  margin-block: 0;
 }
 
-#bookForm label {
-  display: inline-block;
-  width: 15ch;
-  height: 2em;
+h1,
+h2 {
+  color: gray;
+  text-align: center;
+}
+
+h2 {
+  margin-block: 24px;
+}
+
+h3 {
+  margin-top: 24px;
+}
+
+section {
+  border-top: 2px dashed;
+  margin-block: 24px;
+}
+
+input {
+  border: 2px solid;
+  font-family: Sono, monospace;
+}
+
+[type='checkbox'] {
+  outline: 2px solid;
+}
+
+button {
+  font-family: 'Fira Mono', monospace;
+  font-weight: 500;
+  border: 2px solid;
+  background-color: lightgray;
+
+  &:hover {
+    background-color: darkgray;
+  }
+}
+
+#bookForm {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 6px;
+
+  div {
+    display: flex;
+
+    label {
+      width: 20ch;
+      height: 1lh;
+      flex: 0 0 10ch;
+
+      &[for='bookFormIsComplete'] {
+        flex: 0 0 15ch;
+      }
+    }
+
+    input[type='text'],
+    input[type='number'] {
+      width: 100%;
+    }
+  }
+}
+
+#searchBook {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: stretch;
+  align-items: baseline;
+  gap: 12px;
+
+  input {
+    flex: 1 1 auto;
+  }
+}
+
+#incompleteBookList,
+#completeBookList {
+  div:has(> button) {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 12px;
+    justify-content: flex-start;
+  }
 }
