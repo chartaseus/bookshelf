@@ -3,13 +3,12 @@ Dari _starter project_ yang ada, saya menulis kode JavaScript di `main.js` agar 
 1. menambahkan buku baru dan menampilkan data buku di rak yang semestinya
 2. memindahkan buku ke rak dari **Belum Selesai Dibaca** ke **Selesai Dibaca** dan sebaliknya
 3. menyimpan data buku di `LocalStorage` agar data tidak hilang walaupun tab atau broeser ditutup
-4. mencari (memfilter) judul buku
-5. menghapus data buku
+4. menghapus data buku
+5. mencari (memfilter) judul buku
+6. mengedit data buku
 
-Selain itu, saya juga mempercantik tampilan aplikasi dengan CSS
+Selain itu, saya juga mempercantik tampilan aplikasi dengan CSS.
 
----
----
 ---
 
 # Bookshelf App Starter Project
